@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Bureau {
+  id    String @id @default(cuid())
+  code  String @unique // RB, PGRC, AB, LC
+  name  String
+  users User[]
+  cases Case[] @relation("CurrentBureau")
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String
+  email         String       @unique
+  passwordHash  String
+  role          String       // MANAGEMENT | BUREAU_OFFICER | REGIONAL_OFFICER
+  bureauId      String?
+  bureau        Bureau?      @relation(fields: [bureauId], references: [id])
+  region        String?
+  assignedCases Case[]       @relation("Assignee")
+  actions       CaseAction[]
+}
+
+model Institution {
+  id             String         @id @default(cuid())
+  aicteId        String         @unique // AICTE Permanent ID e.g. 1-4829173
+  name           String
+  normalizedName String         // lowercase, stripped, for fuzzy match
+  address        String
+  city           String
+  state          String
+  region         String         // Central | Eastern | Northern | North-Eastern | Southern | Western
+  type           String         // Engineering | Management | Pharmacy ...
+  cases          Case[]
+  overlapGroups  OverlapGroup[]
+
+  @@index([region])
+}
+
+model Case {
+  id                 String          @id @default(cuid())
+  caseNo             String          @unique // AICTE/RB/2026/0042
+  institutionId      String
+  institution        Institution     @relation(fields: [institutionId], references: [id])
+  currentBureauId    String
+  currentBureau      Bureau          @relation("CurrentBureau", fields: [currentBureauId], references: [id])
+  assigneeId         String?
+  assignee           User?           @relation("Assignee", fields: [assigneeId], references: [id])
+  category           String          // Fee Regulation | Faculty Norms | Infrastructure | Admission | Affiliation | Harassment | Other
+  source             String          // STUDENT | FACULTY | STAKEHOLDER | OTHER
+  subject            String
+  description        String
+  status             String          @default("RECEIVED") // RECEIVED|UNDER_PROCESS|TRANSFERRED|ESCALATED|DISPOSED
+  priority           String          @default("NORMAL")   // NORMAL | HIGH
+  receivedAt         DateTime
+  slaDays            Int
+  expectedDisposalAt DateTime
+  lastActionAt       DateTime
+  lastActionNote     String?
+  nextAction         String?
+  disposedAt         DateTime?
+  outcome            String?
+  originBureauCode   String          // bureau where first received
+  createdAt          DateTime        @default(now())
+  actions            CaseAction[]
+  overlapMembers     OverlapMember[]
+  linksA             CaseLink[]      @relation("LinkA")
+  linksB             CaseLink[]      @relation("LinkB")
+  alerts             Alert[]
+
+  @@index([institutionId])
+  @@index([currentBureauId, status])
+  @@index([expectedDisposalAt])
+}
+
+model CaseAction {
+  id         String   @id @default(cuid())
+  caseId     String
+  case       Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id])
+  bureauCode String
+  type       String   // CREATE|REMARK|STATUS_CHANGE|TRANSFER|ESCALATE|LINK|DISPOSE|REOPEN|OVERLAP_COORDINATED|OVERLAP_DISMISSED
+  fromValue  String?  // e.g. old status / from bureau
+  toValue    String?
+  remarks    String?
+  createdAt  DateTime @default(now())
+
+  @@index([caseId, createdAt])
+}
+
+model OverlapGroup {
+  id             String          @id @default(cuid())
+  institutionId  String
+  institution    Institution     @relation(fields: [institutionId], references: [id])
+  kind           String          // CROSS_BUREAU | DUPLICATE | POSSIBLE_CONFLICT
+  score          Float           // 0..1
+  strength       String          // STRONG | POSSIBLE
+  reasonsJson    String          // [{code,label,weight}]
+  status         String          @default("OPEN") // OPEN | COORDINATED | DISMISSED
+  leadBureauCode String?
+  resolutionNote String?
+  resolvedById   String?
+  detectedAt     DateTime        @default(now())
+  resolvedAt     DateTime?
+  members        OverlapMember[]
+
+  @@index([institutionId, status])
+}
+
+model OverlapMember {
+  groupId String
+  group   OverlapGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  caseId  String
+  case    Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@id([groupId, caseId])
+}
+
+model CaseLink {
+  id         String   @id @default(cuid())
+  caseAId    String
+  caseBId    String
+  caseA      Case     @relation("LinkA", fields: [caseAId], references: [id], onDelete: Cascade)
+  caseB      Case     @relation("LinkB", fields: [caseBId], references: [id], onDelete: Cascade)
+  reason     String?
+  linkedById String
+  createdAt  DateTime @default(now())
+
+  @@unique([caseAId, caseBId])
+}
+
+model SlaRule {
+  id       String @id @default(cuid())
+  category String @unique
+  slaDays  Int
+}
+
+model Alert {
+  id             String   @id @default(cuid())
+  caseId         String?
+  case           Case?    @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  overlapGroupId String?
+  type           String   // OVERLAP_DETECTED|SLA_NEARING|SLA_CRITICAL|OVERDUE|ESCALATION|IDLE
+  key            String   @default("") // idempotency key (e.g. threshold or group id)
+  severity       String   // INFO|WARNING|DANGER
+  audience       String   // BUREAU:RB | MANAGEMENT | REGION:Central
+  title          String
+  message        String
+  isRead         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  @@unique([caseId, type, key, audience])
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  actorId   String?
+  action    String
+  entity    String
+  entityId  String
+  payload   String?
+  prevHash  String
+  hash      String
+  createdAt DateTime @default(now())
+}
+
