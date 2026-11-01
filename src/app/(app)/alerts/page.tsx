@@ -156,50 +156,36 @@ export default function AlertsPage() {
   };
 
   const getSeverityBadge = (severity: string, type: string) => {
-    if (type === "ESCALATION") {
+    if (type === "ESCALATION" || type === "OVERDUE" || type === "SLA_CRITICAL") {
       return (
-        <span className="px-2 py-0.5 rounded-full bg-danger-50 text-danger border border-danger/20 text-[10px] font-bold">
-          ESCALATED
+        <span className="px-2 py-0.5 rounded-full bg-danger-soft text-danger-text border border-danger/30 text-[10px] font-bold">
+          {type === "ESCALATION" ? "ESCALATED" : type === "OVERDUE" ? "OVERDUE" : "CRITICAL"}
         </span>
       );
     }
     if (type === "OVERLAP_DETECTED") {
       return (
-        <span className="px-2 py-0.5 rounded-full bg-warning-50 text-warning border border-warning/20 text-[10px] font-bold">
+        <span className="px-2 py-0.5 rounded-full bg-overlap-soft text-overlap-text border border-overlap/30 text-[10px] font-bold">
           OVERLAP
-        </span>
-      );
-    }
-    if (type === "OVERDUE") {
-      return (
-        <span className="px-2 py-0.5 rounded-full bg-danger-50 text-danger border border-danger/20 text-[10px] font-bold">
-          OVERDUE
-        </span>
-      );
-    }
-    if (type === "SLA_CRITICAL") {
-      return (
-        <span className="px-2 py-0.5 rounded-full bg-danger-50 text-danger border border-danger/20 text-[10px] font-bold">
-          CRITICAL
         </span>
       );
     }
     if (type === "SLA_NEARING") {
       return (
-        <span className="px-2 py-0.5 rounded-full bg-warning-50 text-warning border border-warning/20 text-[10px] font-bold">
+        <span className="px-2 py-0.5 rounded-full bg-sla-soft text-sla-text border border-sla/30 text-[10px] font-bold">
           NEARING SLA
         </span>
       );
     }
     if (type === "IDLE") {
       return (
-        <span className="px-2 py-0.5 rounded-full bg-slate-100 text-muted border border-border text-[10px] font-bold">
+        <span className="px-2 py-0.5 rounded-full bg-neutral-soft text-neutral-text border border-border text-[10px] font-bold">
           IDLE
         </span>
       );
     }
     return (
-      <span className="px-2 py-0.5 rounded-full bg-primary-50 text-primary border border-primary/20 text-[10px] font-bold">
+      <span className="px-2 py-0.5 rounded-full bg-primary-soft text-primary border border-primary/20 text-[10px] font-bold">
         {severity}
       </span>
     );
@@ -210,7 +196,7 @@ export default function AlertsPage() {
       case "DANGER":
         return <AlertCircle className="w-4 h-4 text-danger shrink-0 mt-0.5" />;
       case "WARNING":
-        return <AlertTriangle className="w-4 h-4 text-warning shrink-0 mt-0.5" />;
+        return <AlertTriangle className="w-4 h-4 text-overlap shrink-0 mt-0.5" />;
       default:
         return <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />;
     }
@@ -222,11 +208,11 @@ export default function AlertsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-border">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-primary-dark tracking-tight">
+            <h1 className="text-xl font-bold text-ink tracking-tight">
               Alerts & Notifications
             </h1>
             {unreadTotal > 0 && (
-              <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-danger-50 text-danger border border-danger/20">
+              <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-danger-soft text-danger-text border border-danger/30">
                 {unreadTotal} unread
               </span>
             )}
@@ -242,7 +228,7 @@ export default function AlertsPage() {
               type="button"
               onClick={handleMarkAllAsRead}
               disabled={markingAll}
-              className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-slate-50 text-xs font-semibold text-ink flex items-center gap-1.5 transition disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-canvas text-xs font-semibold text-ink flex items-center gap-1.5 transition disabled:opacity-50"
             >
               <CheckCheck className="w-3.5 h-3.5 text-primary" />
               <span>{markingAll ? "Marking..." : "Mark all as read"}</span>
@@ -251,7 +237,7 @@ export default function AlertsPage() {
 
           <Link
             href="/settings/sla"
-            className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-slate-50 text-xs font-semibold text-ink flex items-center gap-1.5 transition"
+            className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-canvas text-xs font-semibold text-ink flex items-center gap-1.5 transition"
             title="Configure SLA Rules & Thresholds"
           >
             <Settings className="w-3.5 h-3.5 text-muted" />
@@ -263,7 +249,7 @@ export default function AlertsPage() {
               type="button"
               onClick={handleRunScan}
               disabled={scanning}
-              className="px-3.5 py-1.5 rounded-lg bg-primary hover:bg-primary-dark text-white text-xs font-semibold flex items-center gap-2 transition disabled:opacity-50 shadow-xs"
+              className="px-3.5 py-1.5 rounded-lg bg-primary hover:bg-primary-hover text-white text-xs font-semibold flex items-center gap-2 transition disabled:opacity-50 shadow-2xs"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${scanning ? "animate-spin" : ""}`} />
               <span>{scanning ? "Evaluating Cases..." : "Run SLA Scan Now"}</span>
@@ -274,11 +260,11 @@ export default function AlertsPage() {
 
       {/* Scan Feedback Banner */}
       {scanMessage && (
-        <div className="p-3 rounded-lg bg-primary-50 border border-primary/20 text-xs text-primary flex items-center justify-between animate-in fade-in">
+        <div className="p-3 rounded-lg bg-primary-soft border border-primary/20 text-xs text-primary flex items-center justify-between animate-in fade-in">
           <span>{scanMessage}</span>
           <button
             onClick={() => setScanMessage(null)}
-            className="text-primary hover:text-primary-dark font-bold ml-3"
+            className="text-primary hover:text-primary-hover font-bold ml-3"
           >
             ×
           </button>

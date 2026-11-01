@@ -15,6 +15,8 @@ import {
   Loader2,
 } from "lucide-react";
 import { STATUS_MAP, computeSlaState, CATEGORIES } from "@/lib/utils";
+import { StatusChip } from "@/components/common/StatusChip";
+import { BureauBadge } from "@/components/common/BureauBadge";
 
 interface CaseItem {
   id: string;
@@ -147,14 +149,14 @@ function CasesContent() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-primary-dark tracking-tight">Cases</h1>
+          <h1 className="text-xl font-bold text-ink tracking-tight">Cases</h1>
           <p className="text-xs text-muted mt-0.5">
             Single-window institution complaint directory across AICTE Bureaus & Cells.
           </p>
         </div>
         <Link
           href="/cases/new"
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white text-xs font-medium transition shadow-sm self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white text-xs font-semibold transition shadow-2xs self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>New Case</span>
@@ -185,8 +187,8 @@ function CasesContent() {
             onClick={() => setShowFilters(!showFilters)}
             className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-xs font-medium transition ${
               showFilters || activeFilterCount > 0
-                ? "bg-primary-50 border-primary/30 text-primary"
-                : "border-border bg-surface text-ink hover:bg-slate-50"
+                ? "bg-primary-soft border-primary/30 text-primary font-semibold"
+                : "border-border bg-surface text-ink hover:bg-canvas"
             }`}
           >
             <Filter className="w-3.5 h-3.5" />
@@ -202,7 +204,7 @@ function CasesContent() {
             <button
               onClick={clearAllFilters}
               title="Clear all filters"
-              className="p-2 rounded-lg border border-border text-muted hover:text-danger hover:bg-danger-50 text-xs transition"
+              className="p-2 rounded-lg border border-border text-muted hover:text-danger-text hover:bg-danger-soft text-xs transition"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
@@ -310,8 +312,8 @@ function CasesContent() {
                 }}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition border ${
                   overlapOnly
-                    ? "bg-warning-50 border-warning/40 text-warning font-semibold ring-1 ring-warning/30"
-                    : "border-border bg-canvas/60 text-muted hover:text-ink"
+                    ? "bg-overlap-soft border-overlap/40 text-overlap-text font-semibold ring-1 ring-overlap/30"
+                    : "border-border bg-canvas text-subtle hover:text-ink"
                 }`}
               >
                 ⚡ Overlapping Only
@@ -325,8 +327,8 @@ function CasesContent() {
                 }}
                 className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition border ${
                   overdueOnly
-                    ? "bg-danger-50 border-danger/40 text-danger font-semibold ring-1 ring-danger/30"
-                    : "border-border bg-canvas/60 text-muted hover:text-ink"
+                    ? "bg-danger-soft border-danger/40 text-danger-text font-semibold ring-1 ring-danger/30"
+                    : "border-border bg-canvas text-subtle hover:text-ink"
                 }`}
               >
                 ⏰ Beyond Timeline Only
@@ -341,7 +343,7 @@ function CasesContent() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-border bg-slate-50/70 text-[10px] font-semibold text-muted uppercase tracking-wider">
+              <tr className="border-b border-border bg-canvas/70 text-[10px] font-semibold text-muted uppercase tracking-wider">
                 <th className="py-3 px-4">Case ID</th>
                 <th className="py-3 px-4">Institution</th>
                 <th className="py-3 px-4">Category</th>
@@ -381,20 +383,14 @@ function CasesContent() {
                     status: c.status,
                   });
 
-                  const statusConfig = STATUS_MAP[c.status] || {
-                    label: c.status,
-                    bg: "bg-slate-100",
-                    text: "text-slate-700",
-                  };
-
                   return (
                     <tr
                       key={c.id}
                       onClick={() => router.push(`/cases/${c.id}`)}
-                      className="hover:bg-slate-50/80 cursor-pointer transition group"
+                      className="hover:bg-selected cursor-pointer transition group"
                     >
                       {/* Col 1: Case ID (Monospace) */}
-                      <td className="py-3.5 px-4 font-mono font-semibold text-primary group-hover:text-primary-dark">
+                      <td className="py-3.5 px-4 font-mono font-semibold text-primary group-hover:underline">
                         {c.caseNo}
                       </td>
 
@@ -406,35 +402,28 @@ function CasesContent() {
                         <div className="flex items-center gap-1.5 text-[11px] text-muted font-mono mt-0.5">
                           <span>{c.institution.aicteId}</span>
                           <span>·</span>
-                          <span className="font-sans">{c.institution.city}</span>
+                          <span className="font-sans text-subtle">{c.institution.city}</span>
                         </div>
                       </td>
 
                       {/* Col 3: Category */}
-                      <td className="py-3.5 px-4 text-muted whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-subtle whitespace-nowrap">
                         {c.category}
                       </td>
 
-                      {/* Col 4: Status (Micro-UI chip) */}
+                      {/* Col 4: Status (Atlassian StatusChip) */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusConfig.bg} ${statusConfig.text}`}
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-                          {statusConfig.label}
-                        </span>
+                        <StatusChip status={c.status} size="sm" />
                       </td>
 
-                      {/* Col 5: Current Bureau (Chip + Overlap Icon if active) */}
+                      {/* Col 5: Current Bureau (BureauBadge + Overlap icon if active) */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
-                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">
-                            {c.currentBureau.code}
-                          </span>
+                          <BureauBadge code={c.currentBureau.code} size="sm" />
                           {c.hasActiveOverlap && (
                             <span
                               title={`Active Overlap: ${c.activeOverlap?.kind}`}
-                              className="p-1 rounded bg-warning-50 text-warning"
+                              className="p-1 rounded bg-overlap-soft text-overlap"
                             >
                               <GitMerge className="w-3.5 h-3.5" />
                             </span>
@@ -459,7 +448,7 @@ function CasesContent() {
         </div>
 
         {/* Minimalist Pagination Bar */}
-        <div className="px-4 py-3 border-t border-border bg-slate-50/50 flex items-center justify-between text-xs text-muted">
+        <div className="px-4 py-3 border-t border-border bg-canvas/40 flex items-center justify-between text-xs text-muted">
           <span>
             Showing{" "}
             <strong className="text-ink">
@@ -476,7 +465,7 @@ function CasesContent() {
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={pagination.page <= 1 || loading}
-              className="p-1.5 rounded-md border border-border bg-surface hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+              className="p-1.5 rounded-md border border-border bg-surface hover:bg-canvas disabled:opacity-40 disabled:cursor-not-allowed transition"
               title="Previous page"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -487,7 +476,7 @@ function CasesContent() {
             <button
               onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
               disabled={pagination.page >= pagination.totalPages || loading}
-              className="p-1.5 rounded-md border border-border bg-surface hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition"
+              className="p-1.5 rounded-md border border-border bg-surface hover:bg-canvas disabled:opacity-40 disabled:cursor-not-allowed transition"
               title="Next page"
             >
               <ChevronRight className="w-4 h-4" />

@@ -1,31 +1,60 @@
-# 04 — UI / UX DESIGN SYSTEM (clean · trustworthy · minimalist)
+# 04 — UI / UX DESIGN SYSTEM (Jira / Atlassian Inspired · Clean · Trustworthy · Minimalist)
 
-**Feel:** a calm government-grade tool. White space, quiet blues, colour only when it means something. Think "clear desk", not "control room".
+**Feel:** a calm government-grade tool taking design cues from Jira and the Atlassian Design System: a calm neutral base, ONE brand blue reserved for the primary action, and a distinct accent colour for each meaning. A dark navy sidebar gives structure. Colour carries meaning (status, bureau, urgency), never decoration.
 
 ## 1. Color tokens
+
+### Neutrals and structure
 ```
-primary        #1D4ED8   buttons, links, active nav
-primary-dark   #0F2A5C   headings, logo
-primary-50     #EFF4FF   active nav bg, selected row
-ink            #0F172A   body text
-muted          #64748B   secondary text, labels
-border         #E5E9F0   dividers, card borders
-canvas         #F7F9FC   page background
-surface        #FFFFFF   cards, sidebar, top bar
-success        #15803D   bg #E8F5EC     disposed, on time
-warning        #B45309   bg #FEF3E2     overlap, nearing SLA
-danger         #B91C1C   bg #FDECEC     overdue, escalated
+sidebar:        #172B4D  (dark navy; text #B6C2CF; active item bg white/14% + 3px left bar #579DFF; hover white/8%)
+canvas:         #F7F8F9  (page background)
+surface:        #FFFFFF  (cards, top bar)
+border:         #DDDEE1
+ink:            #172B4D  (headings and body text)
+text-subtle:    #44546F
+muted:          #626F86
+selected:       #E9F2FE  (selected row, hover)
 ```
-### Status chip mapping (dot + label, tinted bg)
-| Status | Style |
-|---|---|
-| Received | muted on `#F1F5F9` |
-| Under process | primary on primary-50 |
-| Transferred | primary-dark on `#E4EAF6` |
-| Escalated | danger on danger-50 |
-| Disposed | success on success-50 |
-| Overlap flag | warning on warning-50 (icon `GitMerge`) |
-| Overdue | danger on danger-50 |
+
+### Brand (primary action only)
+```
+primary:        #1868DB, hover #1558BC, soft #E9F2FE
+```
+
+### Status and meaning (solid / soft bg / text on soft)
+```
+success (Disposed, on time):      #22A06B / #DCFFF1 / #216E4E
+overlap (Coordination Required):  #C75300 / #FFF1E5 / #A54800
+nearing SLA:                      #CF9F02 / #FFF7D6 / #7F5F01
+danger (Overdue, Escalated):      #C9372C / #FFECEB / #AE2E24
+info (Under process):             #1868DB / #E9F2FE / #0C4FB0
+neutral (Received, Transferred):  #626F86 / #F1F2F4 / #44546F
+```
+
+### Bureau/Cell identity colours (square badge with white code letters, also workload bar colours)
+```
+RB:   #1868DB (blue)
+PGRC: #803FA5 (purple)
+AB:   #2898BD (teal)
+LC:   #C9468D (magenta)
+```
+
+### Categorical Charts & Reports Order
+```
+#1868DB, #2898BD, #803FA5, #C75300, #22A06B
+```
+
+### Status chip mapping (dot + label, soft-background pill, WCAG AA compliant)
+| Status | Token Style | Dot | Label |
+|---|---|---|---|
+| Received | `#F1F2F4` bg / `#44546F` text | `#626F86` | Received |
+| Under Process | `#E9F2FE` bg / `#0C4FB0` text | `#1868DB` | Under Process |
+| Transferred | `#F1F2F4` bg / `#44546F` text | `#803FA5` | Transferred |
+| Escalated | `#FFECEB` bg / `#AE2E24` text | `#C9372C` | Escalated |
+| Disposed | `#DCFFF1` bg / `#216E4E` text | `#22A06B` | Disposed |
+| Coordination Required | `#FFF1E5` bg / `#A54800` text | `#C75300` | Coordination Required |
+| Nearing SLA | `#FFF7D6` bg / `#7F5F01` text | `#CF9F02` | Nearing SLA |
+| Overdue | `#FFECEB` bg / `#AE2E24` text | `#C9372C` | Overdue |
 
 ### Tailwind config
 ```ts
@@ -33,18 +62,35 @@ danger         #B91C1C   bg #FDECEC     overdue, escalated
 import type { Config } from "tailwindcss";
 export default {
   content: ["./src/**/*.{ts,tsx}"],
-  theme: { extend: {
-    colors: {
-      primary: { DEFAULT:"#1D4ED8", dark:"#0F2A5C", 50:"#EFF4FF" },
-      ink:"#0F172A", muted:"#64748B", border:"#E5E9F0", canvas:"#F7F9FC", surface:"#FFFFFF",
-      success:{ DEFAULT:"#15803D", 50:"#E8F5EC" },
-      warning:{ DEFAULT:"#B45309", 50:"#FEF3E2" },
-      danger:{ DEFAULT:"#B91C1C", 50:"#FDECEC" },
+  theme: {
+    extend: {
+      colors: {
+        sidebar: "#172B4D",
+        canvas: "#F7F8F9",
+        surface: "#FFFFFF",
+        border: "#DDDEE1",
+        ink: "#172B4D",
+        subtle: "#44546F",
+        muted: "#626F86",
+        selected: "#E9F2FE",
+        primary: { DEFAULT: "#1868DB", hover: "#1558BC", soft: "#E9F2FE" },
+        success: { DEFAULT: "#22A06B", soft: "#DCFFF1", text: "#216E4E" },
+        overlap: { DEFAULT: "#C75300", soft: "#FFF1E5", text: "#A54800" },
+        sla:     { DEFAULT: "#CF9F02", soft: "#FFF7D6", text: "#7F5F01" },
+        danger:  { DEFAULT: "#C9372C", soft: "#FFECEB", text: "#AE2E24" },
+        info:    { DEFAULT: "#1868DB", soft: "#E9F2FE", text: "#0C4FB0" },
+        neutral: { DEFAULT: "#626F86", soft: "#F1F2F4", text: "#44546F" },
+        bureau: {
+          rb:   "#1868DB",
+          pgrc: "#803FA5",
+          ab:   "#2898BD",
+          lc:   "#C9468D",
+        },
+      },
+      fontFamily: { sans: ["var(--font-inter)", "system-ui", "sans-serif"] },
+      borderRadius: { xl: "12px", "2xl": "16px" },
     },
-    fontFamily: { sans:["var(--font-inter)","system-ui","sans-serif"] },
-    borderRadius: { xl:"12px", "2xl":"16px" },
-    boxShadow: { card:"0 1px 2px rgba(15,23,42,.04)", pop:"0 8px 24px rgba(15,23,42,.08)" },
-  }},
+  },
   plugins: [],
 } satisfies Config;
 ```

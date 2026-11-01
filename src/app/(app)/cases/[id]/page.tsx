@@ -21,6 +21,10 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { formatDate, formatDateTime, formatRelativeTime, computeSlaState, STATUS_MAP } from "@/lib/utils";
+import { StatusChip } from "@/components/common/StatusChip";
+import { BureauBadge } from "@/components/common/BureauBadge";
+import { OverlapBanner } from "@/components/common/OverlapBanner";
+import { TimelineDot } from "@/components/common/TimelineDot";
 
 interface CaseDetailData {
   case: {
@@ -266,29 +270,25 @@ export default function CaseDetailPage() {
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div className="space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="font-mono text-xs font-bold text-primary px-2 py-0.5 rounded bg-primary-50">
+                <span className="font-mono text-xs font-semibold text-primary px-2.5 py-0.5 rounded-md bg-primary-soft border border-primary/20">
                   {c.caseNo}
                 </span>
 
-                <span
-                  className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ${statusConfig.bg} ${statusConfig.text}`}
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-                  {statusConfig.label}
-                </span>
+                <StatusChip status={c.status} />
 
-                <span className="px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-700">
-                  Held by: {c.currentBureau.code} ({c.currentBureau.name})
-                </span>
+                <div className="flex items-center gap-1.5 bg-canvas px-2 py-0.5 rounded border border-border">
+                  <span className="text-[11px] text-muted">Held by:</span>
+                  <BureauBadge code={c.currentBureau.code} size="sm" />
+                </div>
 
                 {c.priority === "HIGH" && (
-                  <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-danger-50 text-danger border border-danger/20">
+                  <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-danger-soft text-danger-text border border-danger/30">
                     High Priority
                   </span>
                 )}
               </div>
 
-              <h1 className="text-lg md:text-xl font-bold text-primary-dark tracking-tight leading-snug">
+              <h1 className="text-lg md:text-xl font-bold text-ink tracking-tight leading-snug">
                 {c.subject}
               </h1>
 
@@ -309,7 +309,7 @@ export default function CaseDetailPage() {
                     setModalType("REMARK");
                     setModalInput("");
                   }}
-                  className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-slate-50 text-xs font-medium text-ink transition shadow-2xs"
+                  className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-selected text-xs font-medium text-ink transition shadow-2xs"
                 >
                   + Add Remark
                 </button>
@@ -320,7 +320,7 @@ export default function CaseDetailPage() {
                     setSelectedStatus(c.status === "RECEIVED" ? "UNDER_PROCESS" : c.status);
                     setModalInput("");
                   }}
-                  className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-slate-50 text-xs font-medium text-ink transition shadow-2xs"
+                  className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-selected text-xs font-medium text-ink transition shadow-2xs"
                 >
                   Update Status
                 </button>
@@ -331,7 +331,7 @@ export default function CaseDetailPage() {
                     setSelectedBureau(c.currentBureau.code === "RB" ? "PGRC" : "RB");
                     setModalInput("");
                   }}
-                  className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-slate-50 text-xs font-medium text-ink transition shadow-2xs inline-flex items-center gap-1"
+                  className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-selected text-xs font-medium text-ink transition shadow-2xs inline-flex items-center gap-1"
                 >
                   <ArrowRightLeft className="w-3.5 h-3.5 text-muted" />
                   <span>Transfer</span>
@@ -342,7 +342,7 @@ export default function CaseDetailPage() {
                     setModalType("ESCALATE");
                     setModalInput("");
                   }}
-                  className="px-3 py-1.5 rounded-lg border border-danger/20 bg-danger-50 text-danger hover:bg-danger-100/60 text-xs font-medium transition shadow-2xs"
+                  className="px-3 py-1.5 rounded-lg border border-danger/30 bg-danger-soft text-danger-text hover:bg-danger-soft/80 text-xs font-medium transition shadow-2xs"
                 >
                   Escalate
                 </button>
@@ -352,7 +352,7 @@ export default function CaseDetailPage() {
                     setModalType("DISPOSE");
                     setModalInput("");
                   }}
-                  className="px-3 py-1.5 rounded-lg bg-success text-white hover:bg-success/90 text-xs font-medium transition shadow-2xs inline-flex items-center gap-1"
+                  className="px-3.5 py-1.5 rounded-lg bg-success hover:bg-success/90 text-white text-xs font-semibold transition shadow-2xs inline-flex items-center gap-1"
                 >
                   <CheckCircle className="w-3.5 h-3.5" />
                   <span>Dispose Case</span>
@@ -365,36 +365,11 @@ export default function CaseDetailPage() {
 
       {/* OVERLAP ADVISORY BANNER (If Active Overlap Exists) */}
       {activeOverlap && (
-        <div className="p-4 rounded-xl border border-warning/40 bg-warning-50/80 shadow-2xs">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-warning text-white flex items-center justify-center shrink-0 mt-0.5">
-                <GitMerge className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-xs font-bold text-warning-dark uppercase tracking-wider">
-                    Potential Overlapping Cases – Coordination Required
-                  </h3>
-                  <span className="px-2 py-0.2 rounded-full text-[10px] font-bold bg-white text-warning border border-warning/30">
-                    {activeOverlap.strength} Overlap ({activeOverlap.kind})
-                  </span>
-                </div>
-                <p className="text-xs text-ink/80 mt-1 leading-relaxed">
-                  Another open case for <strong>{c.institution.name}</strong> is currently being handled in parallel by another Bureau. Review before taking conflicting administrative action.
-                </p>
-              </div>
-            </div>
-
-            <Link
-              href={`/overlaps`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-warning text-white hover:bg-warning/90 text-xs font-semibold shrink-0 shadow-2xs transition"
-            >
-              <span>Review Overlap</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        </div>
+        <OverlapBanner
+          overlapGroupId={activeOverlap.id}
+          score={activeOverlap.score}
+          bureausInvolved={Array.from(new Set(activeOverlap.members.map((m) => m.case.currentBureau.code)))}
+        />
       )}
 
       {/* TWO-COLUMN GRID */}
@@ -427,26 +402,22 @@ export default function CaseDetailPage() {
 
             <div className="pt-5 pl-2 relative">
               {/* Timeline continuous vertical line */}
-              <div className="absolute left-5 top-7 bottom-4 w-0.5 bg-border"></div>
+              <div className="absolute left-[22px] top-7 bottom-4 w-0.5 bg-border"></div>
 
               <div className="space-y-6">
                 {c.actions.map((act) => (
-                  <div key={act.id} className="relative flex items-start gap-4 group">
+                  <div key={act.id} className="relative flex items-start gap-3.5 group">
                     {/* Action Icon / Dot */}
-                    <div className="w-6 h-6 rounded-full bg-surface border-2 border-primary text-primary flex items-center justify-center shrink-0 z-10 shadow-2xs">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                    </div>
+                    <TimelineDot actionType={act.type} />
 
                     {/* Action Content Card */}
-                    <div className="flex-1 bg-canvas/40 rounded-lg p-3 border border-border text-xs space-y-1">
+                    <div className="flex-1 bg-surface rounded-lg p-3.5 border border-border text-xs space-y-1 shadow-2xs">
                       <div className="flex items-center justify-between flex-wrap gap-2">
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-ink">
                             {act.type.replace(/_/g, " ")}
                           </span>
-                          <span className="px-1.5 py-0.2 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">
-                            {act.bureauCode}
-                          </span>
+                          <BureauBadge code={act.bureauCode} size="sm" />
                         </div>
                         <span className="text-[11px] text-muted">
                           {formatDateTime(act.createdAt)} ({formatRelativeTime(act.createdAt)})
@@ -454,7 +425,7 @@ export default function CaseDetailPage() {
                       </div>
 
                       {act.remarks && (
-                        <p className="text-xs text-ink/90 leading-relaxed pt-0.5">
+                        <p className="text-xs text-subtle leading-relaxed pt-0.5">
                           {act.remarks}
                         </p>
                       )}
@@ -558,18 +529,17 @@ export default function CaseDetailPage() {
                   <Link
                     key={rc.id}
                     href={`/cases/${rc.id}`}
-                    className="p-2.5 rounded-lg border border-border bg-canvas/50 hover:bg-slate-100 flex items-center justify-between text-xs transition block group"
+                    className="p-2.5 rounded-lg border border-border bg-canvas/50 hover:bg-selected flex items-center justify-between text-xs transition block group"
                   >
                     <div className="min-w-0 pr-2">
                       <div className="flex items-center gap-1.5">
-                        <span className="font-mono text-[10px] font-bold text-primary">
+                        <span className="font-mono text-[10px] font-semibold text-primary">
                           {rc.caseNo}
                         </span>
-                        <span className="px-1 rounded text-[9px] font-semibold bg-slate-200 text-slate-700">
-                          {rc.currentBureau.code}
-                        </span>
+                        <BureauBadge code={rc.currentBureau.code} size="sm" />
+                        <StatusChip status={rc.status} size="sm" />
                       </div>
-                      <div className="text-ink truncate font-medium text-[11px] mt-0.5">
+                      <div className="text-ink truncate font-medium text-[11px] mt-1">
                         {rc.subject}
                       </div>
                     </div>
@@ -587,7 +557,7 @@ export default function CaseDetailPage() {
         <div className="fixed inset-0 bg-ink/40 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
           <div className="w-full max-w-md bg-surface rounded-xl border border-border p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="text-sm font-bold text-primary-dark">
+              <h3 className="text-sm font-bold text-ink">
                 {modalType === "REMARK" && "Add Progress Remark"}
                 {modalType === "STATUS" && "Update Case Status"}
                 {modalType === "TRANSFER" && "Transfer Case to Another Bureau/Cell"}
@@ -596,14 +566,14 @@ export default function CaseDetailPage() {
               </h3>
               <button
                 onClick={() => setModalType(null)}
-                className="p-1 rounded-md text-muted hover:text-ink hover:bg-slate-100"
+                className="p-1 rounded-md text-muted hover:text-ink hover:bg-canvas"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {actionError && (
-              <div className="p-3 rounded-lg bg-danger-50 border border-danger/20 text-danger text-xs">
+              <div className="p-3 rounded-lg bg-danger-soft border border-danger/30 text-danger-text text-xs">
                 {actionError}
               </div>
             )}
@@ -662,14 +632,14 @@ export default function CaseDetailPage() {
                 <button
                   type="button"
                   onClick={() => setModalType(null)}
-                  className="px-3 py-1.5 rounded-lg border border-border text-ink hover:bg-slate-50 transition"
+                  className="px-3 py-1.5 rounded-lg border border-border text-ink hover:bg-canvas transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="px-4 py-1.5 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition shadow-2xs disabled:opacity-60 inline-flex items-center gap-1.5"
+                  className="px-4 py-1.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-medium transition shadow-2xs disabled:opacity-60 inline-flex items-center gap-1.5"
                 >
                   {actionLoading ? (
                     <>

@@ -121,7 +121,7 @@ export default function NewCasePage() {
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Cases</span>
         </Link>
-        <h1 className="text-xl font-bold text-primary-dark tracking-tight">
+        <h1 className="text-xl font-bold text-ink tracking-tight">
           Register New Complaint Case
         </h1>
         <p className="text-xs text-muted mt-0.5">
@@ -130,7 +130,7 @@ export default function NewCasePage() {
       </div>
 
       {error && (
-        <div className="p-3.5 rounded-lg bg-danger-50 border border-danger/20 text-danger text-xs leading-relaxed">
+        <div className="p-3.5 rounded-lg bg-danger-soft border border-danger/30 text-danger-text text-xs leading-relaxed">
           {error}
         </div>
       )}
@@ -169,7 +169,7 @@ export default function NewCasePage() {
                       setSelectedInst(inst);
                     }}
                     className={`w-full p-2.5 flex items-center justify-between text-left transition ${
-                      isSelected ? "bg-primary-50 text-primary font-medium" : "hover:bg-slate-50 text-ink"
+                      isSelected ? "bg-selected text-primary font-medium" : "hover:bg-canvas text-ink"
                     }`}
                   >
                     <div>
@@ -179,7 +179,7 @@ export default function NewCasePage() {
                       </div>
                     </div>
                     {inst.openCasesCount > 0 && (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-warning-50 text-warning border border-warning/20">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-overlap-soft text-overlap-text border border-overlap/30">
                         {inst.openCasesCount} open case{inst.openCasesCount > 1 ? "s" : ""}
                       </span>
                     )}
@@ -190,7 +190,7 @@ export default function NewCasePage() {
           )}
 
           {selectedInst && (
-            <div className="p-2.5 rounded-lg bg-primary-50/60 border border-primary/20 flex items-center justify-between text-xs text-primary font-medium">
+            <div className="p-2.5 rounded-lg bg-primary-soft border border-primary/20 flex items-center justify-between text-xs text-primary font-medium">
               <div className="flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-primary" />
                 <span>Selected: {selectedInst.name} ({selectedInst.aicteId})</span>
@@ -303,14 +303,14 @@ export default function NewCasePage() {
         <div className="pt-4 border-t border-border flex items-center justify-end gap-3">
           <Link
             href="/cases"
-            className="px-4 py-2 rounded-lg border border-border bg-surface text-xs font-medium text-ink hover:bg-slate-50 transition"
+            className="px-4 py-2 rounded-lg border border-border bg-surface text-xs font-medium text-ink hover:bg-canvas transition"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={submitting}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white text-xs font-medium transition shadow-sm disabled:opacity-60"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white text-xs font-semibold transition shadow-2xs disabled:opacity-60"
           >
             {submitting ? (
               <>

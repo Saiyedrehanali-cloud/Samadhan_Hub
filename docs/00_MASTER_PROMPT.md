@@ -20,21 +20,26 @@ AICTE complaints about the same institution reach different Bureaus/Cells (Regul
 - Next.js Route Handlers (`app/api/**/route.ts`), SQLite via **Prisma 6** (enums stored as `String`)
 - Font: **Inter** via `next/font`
 
-## Design system — clean, trustworthy, minimalist (exact tokens)
-| Token | Hex | Use |
+## Design system — Jira / Atlassian Inspired (exact tokens)
+| Token | Hex / Spec | Use |
 |---|---|---|
-| `primary` | `#1D4ED8` | Primary buttons, links, active nav |
-| `primary-dark` | `#0F2A5C` | Headings, logo, strong text |
-| `primary-50` | `#EFF4FF` | Active nav bg, selected rows, soft highlights |
-| `ink` | `#0F172A` | Body text |
-| `muted` | `#64748B` | Secondary text, labels |
-| `border` | `#E5E9F0` | Dividers, card borders |
-| `canvas` | `#F7F9FC` | Page background |
-| `surface` | `#FFFFFF` | Cards, sidebar, topbar |
-| `success` / `success-50` | `#15803D` / `#E8F5EC` | Disposed, on-time |
-| `warning` / `warning-50` | `#B45309` / `#FEF3E2` | Overlap, nearing SLA |
-| `danger` / `danger-50` | `#B91C1C` / `#FDECEC` | Overdue, escalated |
-Rules: white cards on `canvas`, 1px `border`, radius 12px, almost no shadows, lots of whitespace, colour only for meaning. See `04_UI_UX_DESIGN.md`.
+| `sidebar` | `#172B4D` | Dark navy sidebar (active `#579DFF` 3px bar, text `#B6C2CF`) |
+| `canvas` | `#F7F8F9` | Page background |
+| `surface` | `#FFFFFF` | Cards, top bar |
+| `border` | `#DDDEE1` | Dividers, card borders (1px) |
+| `ink` | `#172B4D` | Headings, body text |
+| `subtle` | `#44546F` | Secondary body text |
+| `muted` | `#626F86` | Metadata, tertiary text, labels |
+| `selected` | `#E9F2FE` | Selected rows, hover highlights |
+| `primary` | `#1868DB`, hover `#1558BC`, soft `#E9F2FE` | Primary buttons and links ONLY |
+| `success` | `#22A06B` / soft `#DCFFF1` / text `#216E4E` | Disposed, on-time |
+| `overlap` | `#C75300` / soft `#FFF1E5` / text `#A54800` | Coordination Required |
+| `sla` | `#CF9F02` / soft `#FFF7D6` / text `#7F5F01` | Nearing SLA |
+| `danger` | `#C9372C` / soft `#FFECEB` / text `#AE2E24` | Overdue, escalated |
+| `info` | `#1868DB` / soft `#E9F2FE` / text `#0C4FB0` | Under process |
+| `neutral` | `#626F86` / soft `#F1F2F4` / text `#44546F` | Received, Transferred |
+| Bureau badges | RB `#1868DB`, PGRC `#803FA5`, AB `#2898BD`, LC `#C9468D` | Square code badge with white text |
+Rules: White cards on `#F7F8F9` canvas, 1px `#DDDEE1` border, radius 12px, brand blue ONLY for primary actions. Colour only for meaning (never decoration). Max 3 accent colours per screen. See `04_UI_UX_DESIGN.md`.
 
 ## MINIMALISM RULES (strict)
 1. **Never show too much data.** Overview = max 4 KPI cards + one "Needs attention" list (5 rows) + one small chart.

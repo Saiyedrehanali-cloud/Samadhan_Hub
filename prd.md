@@ -89,26 +89,32 @@ AuditLog      --> ActorId, Action, Entity, Hash, PrevHash, Timestamp
 
 ---
 
-## 5. Design System Tokens & Minimalism Rules
+## 5. Design System Tokens & Minimalism Rules (Jira / Atlassian Inspired)
 
 ### Color Palette
-- **Primary:** `#1D4ED8` (Buttons, active navigation, links)
-- **Primary Dark:** `#0F2A5C` (Typography headings, AICTE logo text)
-- **Primary 50:** `#EFF4FF` (Active row highlights, subtle backgrounds)
-- **Ink:** `#0F172A` (Primary body copy)
-- **Muted:** `#64748B` (Secondary text, metadata, form labels)
-- **Border:** `#E5E9F0` (Card borders, dividers)
-- **Canvas:** `#F7F9FC` (Background surface)
-- **Surface:** `#FFFFFF` (Card surfaces, modals, sidebar)
-- **Success / 50:** `#15803D` / `#E8F5EC` (Disposed cases, on-time indicators)
-- **Warning / 50:** `#B45309` / `#FEF3E2` (Overlap alerts, nearing SLA)
-- **Danger / 50:** `#B91C1C` / `#FDECEC` (Overdue cases, critical escalations)
+- **Sidebar:** `#172B4D` (Dark navy sidebar; active `#579DFF` left bar, text `#B6C2CF`)
+- **Canvas:** `#F7F8F9` (Calm neutral page background)
+- **Surface:** `#FFFFFF` (White cards, top bar, modals)
+- **Border:** `#DDDEE1` (Clean 1px dividers and card borders)
+- **Ink:** `#172B4D` (Typography headings and primary body copy)
+- **Subtle:** `#44546F` (Secondary body copy)
+- **Muted:** `#626F86` (Metadata, tertiary text, form labels)
+- **Selected:** `#E9F2FE` (Selected row highlights, table hover)
+- **Primary:** `#1868DB` (Hover `#1558BC`, Soft `#E9F2FE` — reserved strictly for primary actions)
+- **Success:** `#22A06B` / Soft `#DCFFF1` / Text `#216E4E` (Disposed cases, on-time indicators)
+- **Overlap:** `#C75300` / Soft `#FFF1E5` / Text `#A54800` (Cross-bureau coordination required)
+- **Nearing SLA:** `#CF9F02` / Soft `#FFF7D6` / Text `#7F5F01` (Nearing resolution deadline)
+- **Danger:** `#C9372C` / Soft `#FFECEB` / Text `#AE2E24` (Overdue cases, critical escalations)
+- **Info:** `#1868DB` / Soft `#E9F2FE` / Text `#0C4FB0` (Under process)
+- **Neutral:** `#626F86` / Soft `#F1F2F4` / Text `#44546F` (Received, transferred)
+- **Bureau Identity Badges:** RB `#1868DB`, PGRC `#803FA5`, AB `#2898BD`, LC `#C9468D`
 
 ### Strict Minimalism Principles
 1. **Never show too much data:** Overview consists strictly of 4 KPI metrics + 1 "Needs Attention" queue (5 items) + 1 Bureau workload chart.
 2. **Tables max 6 columns:** Deep details reside in dedicated case detail pages or flyout drawers.
 3. **Progressive disclosure:** Summaries first; click through for detailed audits and timelines.
-4. **Single primary action:** Every view features at most one dominant primary action button.
+4. **Single primary action:** Every view features at most one dominant primary action button in brand blue (`#1868DB`).
+5. **No color alone:** Every status chip and alert features both text and an icon/dot (WCAG AA).
 
 ---
 

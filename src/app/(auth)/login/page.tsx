@@ -84,89 +84,94 @@ function LoginForm() {
   };
 
   return (
-    <div className="bg-surface rounded-xl border border-border p-6 shadow-sm">
-      {/* Quick Demo Selector */}
-      <div className="mb-5">
-        <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-2">
-          Select Demo Role
-        </label>
-        <div className="grid grid-cols-2 gap-2">
-          {DEMO_ACCOUNTS.map((acc) => {
-            const isSelected = selectedRole === acc.label;
-            return (
-              <button
-                key={acc.label}
-                type="button"
-                onClick={() => selectDemoAccount(acc)}
-                className={`flex flex-col items-start p-2.5 rounded-lg border text-left transition-all ${
-                  isSelected
-                    ? "border-primary bg-primary-50/70 text-primary font-medium ring-1 ring-primary/30"
-                    : "border-border bg-surface text-ink hover:border-slate-300 hover:bg-slate-50/50"
-                }`}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span className="text-xs font-semibold">{acc.label}</span>
-                  {isSelected && <Check className="w-3.5 h-3.5 text-primary" />}
-                </div>
-                <span className="text-[11px] text-muted mt-0.5 leading-tight">{acc.roleDesc}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+    <div className="bg-surface rounded-xl border border-border shadow-2xs overflow-hidden">
+      {/* Rule 12: Thin top accent line using a blue-to-teal gradient */}
+      <div className="h-1 bg-gradient-to-r from-primary to-bureau-ab w-full" />
 
-      {error && (
-        <div className="mb-4 p-3 rounded-lg bg-danger-50 border border-danger/20 text-danger text-xs leading-relaxed">
-          {error}
-        </div>
-      )}
-
-      {/* Form */}
-      <form onSubmit={handleLogin} className="space-y-4">
-        <div>
-          <label className="block text-xs font-medium text-ink mb-1.5">Official Email</label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="officer@aicte.demo"
-            className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-surface text-ink placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-          />
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <label className="block text-xs font-medium text-ink">Password</label>
-            <span className="text-[11px] text-muted">Demo: Demo@1234</span>
+      <div className="p-6">
+        {/* Quick Demo Selector */}
+        <div className="mb-5">
+          <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-2">
+            Select Demo Role
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            {DEMO_ACCOUNTS.map((acc) => {
+              const isSelected = selectedRole === acc.label;
+              return (
+                <button
+                  key={acc.label}
+                  type="button"
+                  onClick={() => selectDemoAccount(acc)}
+                  className={`flex flex-col items-start p-2.5 rounded-lg border text-left transition-all ${
+                    isSelected
+                      ? "border-primary bg-selected text-primary font-medium ring-1 ring-primary/30"
+                      : "border-border bg-surface text-ink hover:bg-canvas"
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="text-xs font-semibold">{acc.label}</span>
+                    {isSelected && <Check className="w-3.5 h-3.5 text-primary" />}
+                  </div>
+                  <span className="text-[11px] text-muted mt-0.5 leading-tight">{acc.roleDesc}</span>
+                </button>
+              );
+            })}
           </div>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
-          />
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-medium transition shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Signing in...</span>
-            </>
-          ) : (
-            <>
-              <span>Sign in as {selectedRole}</span>
-              <ArrowRight className="w-4 h-4" />
-            </>
-          )}
-        </button>
-      </form>
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-danger-soft border border-danger/30 text-danger-text text-xs leading-relaxed">
+            {error}
+          </div>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-ink mb-1.5">Official Email</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="officer@aicte.demo"
+              className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-surface text-ink placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
+            />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-medium text-ink">Password</label>
+              <span className="text-[11px] text-muted">Demo: Demo@1234</span>
+            </div>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-surface text-ink focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-semibold transition shadow-2xs disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Signing in...</span>
+              </>
+            ) : (
+              <>
+                <span>Sign in as {selectedRole}</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
@@ -177,13 +182,15 @@ export default function LoginPage() {
       <div className="w-full max-w-[420px]">
         {/* App Branding */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-primary text-white shadow-sm mb-3">
-            <Shield className="w-6 h-6" />
+          <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-sidebar text-white shadow-2xs mb-3">
+            <Shield className="w-5 h-5" />
           </div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary-50 text-primary text-[11px] font-semibold tracking-wider uppercase mb-1">
-            <span>AICTE · PS SIH26264</span>
+          <div className="block">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-neutral-soft text-subtle text-[10px] font-semibold tracking-wider uppercase mb-1">
+              AICTE · PS SIH26264
+            </span>
           </div>
-          <h1 className="text-2xl font-bold text-primary-dark tracking-tight">CaseLens</h1>
+          <h1 className="text-2xl font-bold text-ink tracking-tight">CaseLens</h1>
           <p className="text-xs text-muted mt-1">
             One clear view of every institution complaint across AICTE Bureaus & Cells.
           </p>
@@ -192,7 +199,7 @@ export default function LoginPage() {
         {/* Login Form inside Suspense boundary */}
         <Suspense
           fallback={
-            <div className="bg-surface rounded-xl border border-border p-8 text-center text-xs text-muted">
+            <div className="bg-surface rounded-xl border border-border p-8 text-center text-xs text-muted shadow-2xs">
               Loading sign in...
             </div>
           }

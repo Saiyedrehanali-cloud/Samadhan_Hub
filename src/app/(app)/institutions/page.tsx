@@ -86,10 +86,10 @@ export default function InstitutionsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-border">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-primary-dark tracking-tight">
+            <h1 className="text-xl font-bold text-ink tracking-tight">
               Centralized Institution Directory
             </h1>
-            <span className="px-2 py-0.5 rounded-full bg-slate-100 text-muted border border-border text-[10px] font-bold">
+            <span className="px-2 py-0.5 rounded-full bg-neutral-soft text-muted border border-border text-[10px] font-bold">
               {total} Institutions
             </span>
           </div>
@@ -112,7 +112,7 @@ export default function InstitutionsPage() {
               setSearch(e.target.value);
               setPage(1);
             }}
-            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-border bg-surface placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-primary shadow-2xs"
+            className="w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-border bg-surface text-ink placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-primary shadow-2xs"
           />
         </div>
 
@@ -140,7 +140,7 @@ export default function InstitutionsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-border bg-slate-50/70 text-[11px] font-bold text-muted uppercase tracking-wider">
+              <tr className="border-b border-border bg-canvas/70 text-[11px] font-bold text-muted uppercase tracking-wider">
                 <th className="py-3 px-4">AICTE ID</th>
                 <th className="py-3 px-4">Institution Name & City</th>
                 <th className="py-3 px-4">Region</th>
@@ -174,7 +174,7 @@ export default function InstitutionsPage() {
                   <tr
                     key={inst.id}
                     onClick={() => router.push(`/institutions/${inst.id}`)}
-                    className="hover:bg-slate-50/80 transition cursor-pointer group"
+                    className="hover:bg-selected transition cursor-pointer group"
                   >
                     {/* Col 1: AICTE ID */}
                     <td className="py-3 px-4 font-mono font-semibold text-primary">
@@ -183,7 +183,7 @@ export default function InstitutionsPage() {
 
                     {/* Col 2: Name & City */}
                     <td className="py-3 px-4 max-w-[260px]">
-                      <div className="font-semibold text-ink group-hover:text-primary transition truncate">
+                      <div className="font-semibold text-ink group-hover:underline transition truncate">
                         {inst.name}
                       </div>
                       <div className="text-[11px] text-muted flex items-center gap-1 mt-0.5">
@@ -207,7 +207,7 @@ export default function InstitutionsPage() {
                     {/* Col 5: Open Cases */}
                     <td className="py-3 px-4 text-center">
                       {inst.openCasesCount > 0 ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-primary-50 text-primary border border-primary/20">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-primary-soft text-primary border border-primary/20">
                           {inst.openCasesCount} active
                         </span>
                       ) : (
@@ -218,12 +218,12 @@ export default function InstitutionsPage() {
                     {/* Col 6: Advisory Status */}
                     <td className="py-3 px-4 text-right">
                       {inst.hasActiveOverlap ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-warning-50 text-warning border border-warning/20">
-                          <GitMerge className="w-3 h-3 text-warning" />
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-overlap-soft text-overlap-text border border-overlap/30">
+                          <GitMerge className="w-3 h-3 text-overlap" />
                           <span>Overlap Alert</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium text-muted bg-slate-50 border border-border">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium text-muted bg-neutral-soft border border-border">
                           <CheckCircle2 className="w-3 h-3 text-success" />
                           <span>Clear</span>
                         </span>

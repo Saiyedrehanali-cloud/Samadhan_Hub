@@ -9,39 +9,85 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: "#1D4ED8",
-          dark: "#0F2A5C",
-          50: "#EFF4FF",
-        },
-        ink: "#0F172A",
-        muted: "#64748B",
-        border: "#E5E9F0",
-        canvas: "#F7F9FC",
+        // Neutrals & Structure
+        sidebar: "#172B4D",
+        canvas: "#F7F8F9",
         surface: "#FFFFFF",
-        success: {
-          DEFAULT: "#15803D",
-          50: "#E8F5EC",
+        border: "#DDDEE1",
+        ink: "#172B4D",
+        subtle: "#44546F",
+        muted: "#626F86",
+        selected: "#E9F2FE",
+
+        // Brand (Primary action only)
+        primary: {
+          DEFAULT: "#1868DB",
+          hover: "#1558BC",
+          soft: "#E9F2FE",
+          dark: "#0F2A5C",
+          50: "#E9F2FE",
         },
-        warning: {
-          DEFAULT: "#B45309",
-          50: "#FEF3E2",
+
+        // Status & Meaning tokens
+        success: {
+          DEFAULT: "#22A06B",
+          soft: "#DCFFF1",
+          text: "#216E4E",
+          50: "#DCFFF1",
+        },
+        overlap: {
+          DEFAULT: "#C75300",
+          soft: "#FFF1E5",
+          text: "#A54800",
+          50: "#FFF1E5",
+        },
+        sla: {
+          DEFAULT: "#CF9F02",
+          soft: "#FFF7D6",
+          text: "#7F5F01",
+          50: "#FFF7D6",
         },
         danger: {
-          DEFAULT: "#B91C1C",
-          50: "#FDECEC",
+          DEFAULT: "#C9372C",
+          soft: "#FFECEB",
+          text: "#AE2E24",
+          50: "#FFECEB",
+        },
+        info: {
+          DEFAULT: "#1868DB",
+          soft: "#E9F2FE",
+          text: "#0C4FB0",
+        },
+        neutral: {
+          DEFAULT: "#626F86",
+          soft: "#F1F2F4",
+          text: "#44546F",
+        },
+        warning: {
+          DEFAULT: "#C75300",
+          soft: "#FFF1E5",
+          text: "#A54800",
+          50: "#FFF1E5",
+        },
+
+        // Bureau / Cell Identity Badges
+        bureau: {
+          rb: "#1868DB",
+          pgrc: "#803FA5",
+          ab: "#2898BD",
+          lc: "#C9468D",
         },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
       },
       borderRadius: {
         xl: "12px",
         "2xl": "16px",
       },
       boxShadow: {
-        card: "0 1px 2px rgba(15,23,42,.04)",
-        pop: "0 8px 24px rgba(15,23,42,.08)",
+        card: "0 1px 2px rgba(23,43,77,.05)",
+        pop: "0 8px 24px rgba(23,43,77,.12)",
       },
     },
   },
@@ -49,4 +95,3 @@ const config: Config = {
 };
 
 export default config;
-

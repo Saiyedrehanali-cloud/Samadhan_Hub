@@ -60,7 +60,7 @@ export function computeSlaState(item: {
       daysRemaining: 0,
       daysOverdue: isLate ? differenceInCalendarDays(disposedTime, slaTarget) : 0,
       badgeText: isLate ? "Disposed (Late)" : "Disposed (On-time)",
-      badgeClass: isLate ? "bg-muted/10 text-muted" : "bg-success-50 text-success",
+      badgeClass: isLate ? "bg-neutral-soft text-muted border-border" : "bg-success-soft text-success-text border-success/30 font-medium",
     };
   }
 
@@ -77,7 +77,7 @@ export function computeSlaState(item: {
       daysRemaining: 0,
       daysOverdue: overdueDays === 0 ? 1 : overdueDays,
       badgeText: overdueDays <= 1 ? "1 day overdue" : `${overdueDays} days overdue`,
-      badgeClass: "bg-danger-50 text-danger border-danger/20 font-medium",
+      badgeClass: "bg-danger-soft text-danger-text border-danger/30 font-medium",
     };
   } else if (ratio >= 0.75 || diffDays <= 5) {
     return {
@@ -86,7 +86,7 @@ export function computeSlaState(item: {
       daysRemaining: diffDays,
       daysOverdue: 0,
       badgeText: diffDays === 0 ? "Due today" : `${diffDays}d remaining`,
-      badgeClass: "bg-warning-50 text-warning border-warning/20 font-medium",
+      badgeClass: "bg-sla-soft text-sla-text border-sla/30 font-medium",
     };
   } else {
     return {
@@ -95,24 +95,24 @@ export function computeSlaState(item: {
       daysRemaining: diffDays,
       daysOverdue: 0,
       badgeText: `${diffDays}d remaining`,
-      badgeClass: "bg-success-50 text-success border-success/20",
+      badgeClass: "bg-success-soft text-success-text border-success/30 font-medium",
     };
   }
 }
 
 export const BUREAU_MAP: Record<string, { code: string; name: string; shortName: string; color: string }> = {
-  RB: { code: "RB", name: "Regulation Bureau", shortName: "Regulation", color: "#1D4ED8" },
-  PGRC: { code: "PGRC", name: "Public Grievance Redressal Cell", shortName: "PGRC", color: "#7C3AED" },
-  AB: { code: "AB", name: "Approval Bureau", shortName: "Approval", color: "#0D9488" },
-  LC: { code: "LC", name: "Legal Cell", shortName: "Legal", color: "#B45309" },
+  RB: { code: "RB", name: "Regulation Bureau", shortName: "Regulation", color: "#1868DB" },
+  PGRC: { code: "PGRC", name: "Public Grievance Redressal Cell", shortName: "PGRC", color: "#803FA5" },
+  AB: { code: "AB", name: "Approval Bureau", shortName: "Approval", color: "#2898BD" },
+  LC: { code: "LC", name: "Legal Cell", shortName: "Legal", color: "#C9468D" },
 };
 
 export const STATUS_MAP: Record<string, { label: string; bg: string; text: string }> = {
-  RECEIVED: { label: "Received", bg: "bg-slate-100", text: "text-slate-700" },
-  UNDER_PROCESS: { label: "Under Process", bg: "bg-blue-50", text: "text-blue-700" },
-  TRANSFERRED: { label: "Transferred", bg: "bg-amber-50", text: "text-amber-700" },
-  ESCALATED: { label: "Escalated", bg: "bg-red-50", text: "text-red-700" },
-  DISPOSED: { label: "Disposed", bg: "bg-emerald-50", text: "text-emerald-700" },
+  RECEIVED: { label: "Received", bg: "bg-neutral-soft", text: "text-neutral-text" },
+  UNDER_PROCESS: { label: "Under Process", bg: "bg-info-soft", text: "text-info-text" },
+  TRANSFERRED: { label: "Transferred", bg: "bg-neutral-soft", text: "text-neutral-text" },
+  ESCALATED: { label: "Escalated", bg: "bg-danger-soft", text: "text-danger-text" },
+  DISPOSED: { label: "Disposed", bg: "bg-success-soft", text: "text-success-text" },
 };
 
 export const CATEGORIES = [

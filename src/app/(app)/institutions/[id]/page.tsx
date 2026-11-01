@@ -17,6 +17,9 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { StatusChip } from "@/components/common/StatusChip";
+import { BureauBadge } from "@/components/common/BureauBadge";
+import { OverlapBanner } from "@/components/common/OverlapBanner";
 
 interface InstitutionDetailData {
   institution: {
@@ -114,41 +117,6 @@ export default function InstitutionProfilePage() {
 
   const { institution, stats, activeOverlap, cases } = data;
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "DISPOSED":
-        return (
-          <span className="px-2 py-0.5 rounded-full bg-success-50 text-success border border-success/20 text-[10px] font-bold">
-            Disposed
-          </span>
-        );
-      case "ESCALATED":
-        return (
-          <span className="px-2 py-0.5 rounded-full bg-danger-50 text-danger border border-danger/20 text-[10px] font-bold">
-            Escalated
-          </span>
-        );
-      case "TRANSFERRED":
-        return (
-          <span className="px-2 py-0.5 rounded-full bg-warning-50 text-warning border border-warning/20 text-[10px] font-bold">
-            Transferred
-          </span>
-        );
-      case "UNDER_PROCESS":
-        return (
-          <span className="px-2 py-0.5 rounded-full bg-primary-50 text-primary border border-primary/20 text-[10px] font-bold">
-            Under Process
-          </span>
-        );
-      default:
-        return (
-          <span className="px-2 py-0.5 rounded-full bg-slate-100 text-muted border border-border text-[10px] font-bold">
-            {status}
-          </span>
-        );
-    }
-  };
-
   return (
     <div className="space-y-6">
       {/* Back Link */}
@@ -167,14 +135,14 @@ export default function InstitutionProfilePage() {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-primary-50 text-primary border border-primary/20">
+              <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-primary-soft text-primary border border-primary/20">
                 {institution.aicteId}
               </span>
-              <span className="text-xs text-muted font-medium px-2 py-0.5 rounded bg-slate-100">
+              <span className="text-xs text-muted font-medium px-2 py-0.5 rounded bg-neutral-soft">
                 {institution.type}
               </span>
             </div>
-            <h1 className="text-xl font-bold text-primary-dark tracking-tight">
+            <h1 className="text-xl font-bold text-ink tracking-tight">
               {institution.name}
             </h1>
             <div className="flex items-center gap-1.5 text-xs text-muted pt-1">
@@ -187,7 +155,7 @@ export default function InstitutionProfilePage() {
 
           <div className="flex items-center gap-4 shrink-0 sm:border-l sm:border-border sm:pl-6 text-center">
             <div>
-              <div className="text-2xl font-bold text-primary-dark">{stats.openCases}</div>
+              <div className="text-2xl font-bold text-ink">{stats.openCases}</div>
               <div className="text-[11px] font-medium text-muted uppercase tracking-wider">
                 Active Cases
               </div>
@@ -211,40 +179,18 @@ export default function InstitutionProfilePage() {
 
         {/* Active Overlap Alert Banner (if any) */}
         {activeOverlap && (
-          <div className="p-4 rounded-xl bg-warning-50/70 border border-warning/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in">
-            <div className="flex items-start gap-2.5">
-              <ShieldAlert className="w-5 h-5 text-warning shrink-0 mt-0.5" />
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-ink">
-                    Potential Overlapping Cases – Coordination Required
-                  </span>
-                  <span className="px-1.5 py-0.2 rounded-full bg-warning text-white text-[10px] font-bold">
-                    Score: {activeOverlap.score.toFixed(2)}
-                  </span>
-                </div>
-                <p className="text-xs text-muted mt-0.5">
-                  Overlapping complaints currently open simultaneously across{" "}
-                  <strong>{activeOverlap.bureausInvolved.join(" and ")}</strong> on this institution.
-                </p>
-              </div>
-            </div>
-
-            <Link
-              href={`/overlaps/${activeOverlap.id}`}
-              className="px-3.5 py-1.5 rounded-lg bg-surface border border-warning/40 text-xs font-semibold text-warning hover:bg-warning hover:text-white transition flex items-center gap-1.5 shrink-0 self-start sm:self-auto shadow-2xs"
-            >
-              <span>Review Overlap</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+          <OverlapBanner
+            overlapGroupId={activeOverlap.id}
+            score={activeOverlap.score}
+            bureausInvolved={activeOverlap.bureausInvolved}
+          />
         )}
       </div>
 
       {/* Workload Mini-Distribution across Bureaus */}
       <div className="bg-surface rounded-xl border border-border p-4 shadow-2xs">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-bold text-primary-dark uppercase tracking-wider flex items-center gap-1.5">
+          <span className="text-xs font-bold text-ink uppercase tracking-wider flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-primary" />
             Active Case Distribution across AICTE Bureaus / Cells
           </span>
@@ -254,38 +200,53 @@ export default function InstitutionProfilePage() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3 rounded-lg border border-border bg-slate-50/50">
-            <div className="text-[11px] font-semibold text-muted">Regulation Bureau (RB)</div>
-            <div className="text-xl font-bold text-primary-dark mt-1">
-              {stats.workloadByBureau["RB"] || 0}
+          <div className="p-3 rounded-lg border border-border border-t-[3px] border-t-bureau-rb bg-canvas/40 flex items-center justify-between">
+            <div>
+              <div className="text-[11px] font-semibold text-muted">Regulation (RB)</div>
+              <div className="text-xl font-bold text-ink mt-1">
+                {stats.workloadByBureau["RB"] || 0}
+              </div>
             </div>
+            <BureauBadge code="RB" size="sm" />
           </div>
-          <div className="p-3 rounded-lg border border-border bg-slate-50/50">
-            <div className="text-[11px] font-semibold text-muted">Grievance Cell (PGRC)</div>
-            <div className="text-xl font-bold text-primary-dark mt-1">
-              {stats.workloadByBureau["PGRC"] || 0}
+
+          <div className="p-3 rounded-lg border border-border border-t-[3px] border-t-bureau-pgrc bg-canvas/40 flex items-center justify-between">
+            <div>
+              <div className="text-[11px] font-semibold text-muted">Grievance (PGRC)</div>
+              <div className="text-xl font-bold text-ink mt-1">
+                {stats.workloadByBureau["PGRC"] || 0}
+              </div>
             </div>
+            <BureauBadge code="PGRC" size="sm" />
           </div>
-          <div className="p-3 rounded-lg border border-border bg-slate-50/50">
-            <div className="text-[11px] font-semibold text-muted">Approval Bureau (AB)</div>
-            <div className="text-xl font-bold text-primary-dark mt-1">
-              {stats.workloadByBureau["AB"] || 0}
+
+          <div className="p-3 rounded-lg border border-border border-t-[3px] border-t-bureau-ab bg-canvas/40 flex items-center justify-between">
+            <div>
+              <div className="text-[11px] font-semibold text-muted">Approval (AB)</div>
+              <div className="text-xl font-bold text-ink mt-1">
+                {stats.workloadByBureau["AB"] || 0}
+              </div>
             </div>
+            <BureauBadge code="AB" size="sm" />
           </div>
-          <div className="p-3 rounded-lg border border-border bg-slate-50/50">
-            <div className="text-[11px] font-semibold text-muted">Legal Cell (LC)</div>
-            <div className="text-xl font-bold text-primary-dark mt-1">
-              {stats.workloadByBureau["LC"] || 0}
+
+          <div className="p-3 rounded-lg border border-border border-t-[3px] border-t-bureau-lc bg-canvas/40 flex items-center justify-between">
+            <div>
+              <div className="text-[11px] font-semibold text-muted">Legal (LC)</div>
+              <div className="text-xl font-bold text-ink mt-1">
+                {stats.workloadByBureau["LC"] || 0}
+              </div>
             </div>
+            <BureauBadge code="LC" size="sm" />
           </div>
         </div>
       </div>
 
       {/* Consolidated Grievance History Table — Strictly 6 Columns Max */}
       <div className="bg-surface rounded-xl border border-border overflow-hidden shadow-2xs">
-        <div className="p-4 border-b border-border bg-slate-50/70 flex items-center justify-between">
+        <div className="p-4 border-b border-border bg-canvas/70 flex items-center justify-between">
           <div>
-            <h2 className="text-xs font-bold text-primary-dark uppercase tracking-wider flex items-center gap-2">
+            <h2 className="text-xs font-bold text-ink uppercase tracking-wider flex items-center gap-2">
               <FileText className="w-3.5 h-3.5 text-primary" />
               Consolidated Grievance History
             </h2>
@@ -299,7 +260,7 @@ export default function InstitutionProfilePage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-border bg-slate-50/50 text-[11px] font-bold text-muted uppercase tracking-wider">
+              <tr className="border-b border-border bg-canvas/50 text-[11px] font-bold text-muted uppercase tracking-wider">
                 <th className="py-3 px-4">Case No</th>
                 <th className="py-3 px-4">Subject</th>
                 <th className="py-3 px-4">Category</th>
@@ -320,16 +281,16 @@ export default function InstitutionProfilePage() {
                   <tr
                     key={c.id}
                     onClick={() => router.push(`/cases/${c.id}`)}
-                    className="hover:bg-slate-50/80 transition cursor-pointer group"
+                    className="hover:bg-selected transition cursor-pointer group"
                   >
                     {/* Col 1: Case No */}
-                    <td className="py-3 px-4 font-mono font-semibold text-primary">
+                    <td className="py-3 px-4 font-mono font-semibold text-primary group-hover:underline">
                       {c.caseNo}
                     </td>
 
                     {/* Col 2: Subject */}
                     <td className="py-3 px-4 max-w-[320px]">
-                      <div className="font-semibold text-ink group-hover:text-primary transition truncate">
+                      <div className="font-semibold text-ink transition truncate">
                         {c.subject}
                       </div>
                       <div className="text-[11px] text-muted truncate mt-0.5">
@@ -338,20 +299,18 @@ export default function InstitutionProfilePage() {
                     </td>
 
                     {/* Col 3: Category */}
-                    <td className="py-3 px-4 text-ink font-medium">
+                    <td className="py-3 px-4 text-subtle font-medium">
                       {c.category}
                     </td>
 
                     {/* Col 4: Bureau */}
                     <td className="py-3 px-4">
-                      <span className="font-mono text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-ink">
-                        {c.bureauCode}
-                      </span>
+                      <BureauBadge code={c.bureauCode} size="sm" />
                     </td>
 
                     {/* Col 5: Status */}
                     <td className="py-3 px-4">
-                      {getStatusBadge(c.status)}
+                      <StatusChip status={c.status} size="sm" />
                     </td>
 
                     {/* Col 6: Received Date */}

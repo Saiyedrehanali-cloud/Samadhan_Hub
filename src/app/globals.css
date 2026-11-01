@@ -8,8 +8,8 @@
   }
 
   body {
-    background-color: #F7F9FC;
-    color: #0F172A;
+    background-color: #F7F8F9;
+    color: #172B4D;
     font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -17,8 +17,7 @@
 
   /* Accessible focus styling */
   *:focus-visible {
-    outline: 2px solid #1D4ED8;
+    outline: 2px solid #1868DB;
     outline-offset: 2px;
   }
 }
-

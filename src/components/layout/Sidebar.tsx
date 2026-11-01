@@ -61,27 +61,27 @@ export function Sidebar({ user, activeOverlapCount = 5, isOpenMobile = false, on
   };
 
   const content = (
-    <div className="flex flex-col h-full w-[232px] bg-surface border-r border-border select-none">
+    <div className="flex flex-col h-full w-[232px] bg-sidebar border-r border-white/10 select-none text-[#B6C2CF]">
       {/* Top Branding */}
-      <div className="h-16 px-4 flex items-center justify-between border-b border-border">
+      <div className="h-16 px-4 flex items-center justify-between border-b border-white/10">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center shadow-sm">
-            <Shield className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center shadow-xs">
+            <Shield className="w-4 h-4 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-primary-dark tracking-tight text-sm">CaseLens</span>
-              <span className="text-[10px] font-semibold text-primary px-1.5 py-0.2 bg-primary-50 rounded">
+              <span className="font-bold text-white tracking-tight text-sm">CaseLens</span>
+              <span className="text-[10px] font-bold text-white/90 px-1.5 py-0.2 bg-white/15 rounded">
                 AICTE
               </span>
             </div>
-            <p className="text-[10px] text-muted -mt-0.5">SIH 2026 · PS SIH26264</p>
+            <p className="text-[10px] text-[#8C9BAB] -mt-0.5">SIH 2026 · PS SIH26264</p>
           </div>
         </Link>
         {onCloseMobile && (
           <button
             onClick={onCloseMobile}
-            className="md:hidden p-1 rounded-md text-muted hover:text-ink hover:bg-slate-100"
+            className="md:hidden p-1 rounded-md text-[#B6C2CF] hover:text-white hover:bg-white/10"
           >
             <X className="w-5 h-5" />
           </button>
@@ -89,10 +89,10 @@ export function Sidebar({ user, activeOverlapCount = 5, isOpenMobile = false, on
       </div>
 
       {/* Primary Navigation — Strictly <= 6 items per minimalism rules */}
-      <div className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
-        <div className="px-2 mb-2">
-          <span className="text-[10px] font-semibold text-muted uppercase tracking-wider">
-            Main Menu
+      <div className="flex-1 py-4 px-2.5 space-y-1 overflow-y-auto">
+        <div className="px-2.5 mb-2">
+          <span className="text-[10px] font-bold text-[#8C9BAB] uppercase tracking-wider">
+            Workspace
           </span>
         </div>
         {navItems.map((item) => {
@@ -104,22 +104,22 @@ export function Sidebar({ user, activeOverlapCount = 5, isOpenMobile = false, on
               key={item.href}
               href={item.href}
               onClick={onCloseMobile}
-              className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all group ${
+              className={`relative flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all group ${
                 isActive
-                  ? "bg-primary-50 text-primary font-semibold"
-                  : "text-muted hover:text-ink hover:bg-slate-50"
+                  ? "bg-white/[0.14] text-white font-semibold before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-[3px] before:rounded-r before:bg-[#579DFF]"
+                  : "text-[#B6C2CF] hover:text-white hover:bg-white/[0.08]"
               }`}
             >
               <div className="flex items-center gap-2.5">
                 <Icon
                   className={`w-4 h-4 transition-colors ${
-                    isActive ? "text-primary" : "text-muted group-hover:text-ink"
+                    isActive ? "text-[#579DFF]" : "text-[#8C9BAB] group-hover:text-white"
                   }`}
                 />
                 <span>{item.label}</span>
               </div>
               {item.badge !== undefined && (
-                <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-warning-50 text-warning border border-warning/20">
+                <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-overlap text-white shadow-2xs font-mono">
                   {item.badge}
                 </span>
               )}
@@ -129,16 +129,16 @@ export function Sidebar({ user, activeOverlapCount = 5, isOpenMobile = false, on
       </div>
 
       {/* User Profile Card */}
-      <div className="p-3 border-t border-border bg-slate-50/50">
+      <div className="p-3 border-t border-white/10 bg-[#091E42]/80">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-primary-dark text-white flex items-center justify-center text-xs font-semibold shrink-0">
+            <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-2xs">
               {user.name.charAt(0)}
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-medium text-ink truncate leading-tight">{user.name}</p>
+              <p className="text-xs font-semibold text-white truncate leading-tight">{user.name}</p>
               <div className="flex items-center gap-1 mt-0.5">
-                <span className="inline-block text-[10px] font-semibold text-primary bg-primary-50 px-1 rounded">
+                <span className="inline-block text-[10px] font-semibold text-[#579DFF] bg-white/10 px-1.5 py-0.2 rounded font-mono">
                   {getRoleBadge()}
                 </span>
               </div>
@@ -147,7 +147,7 @@ export function Sidebar({ user, activeOverlapCount = 5, isOpenMobile = false, on
           <button
             onClick={handleLogout}
             title="Sign out"
-            className="p-1.5 rounded-md text-muted hover:text-danger hover:bg-danger-50 transition"
+            className="p-1.5 rounded-md text-[#8C9BAB] hover:text-danger hover:bg-white/10 transition"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -166,11 +166,11 @@ export function Sidebar({ user, activeOverlapCount = 5, isOpenMobile = false, on
       {/* Mobile drawer backdrop */}
       {isOpenMobile && (
         <div
-          className="fixed inset-0 bg-ink/40 z-40 md:hidden backdrop-blur-xs transition-opacity"
+          className="fixed inset-0 bg-ink/50 z-40 md:hidden backdrop-blur-xs transition-opacity"
           onClick={onCloseMobile}
         >
           <div
-            className="fixed inset-y-0 left-0 z-50 w-[232px] bg-surface shadow-xl"
+            className="fixed inset-y-0 left-0 z-50 w-[232px] bg-sidebar shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {content}
@@ -180,4 +180,3 @@ export function Sidebar({ user, activeOverlapCount = 5, isOpenMobile = false, on
     </>
   );
 }
-
