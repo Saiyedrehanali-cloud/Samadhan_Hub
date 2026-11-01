@@ -30,9 +30,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# SQLite Database
-*.db
+# SQLite Database temporary files
 *.db-journal
-dev.db
+*.db-wal
+*.db-shm
 dev.db-journal
 
