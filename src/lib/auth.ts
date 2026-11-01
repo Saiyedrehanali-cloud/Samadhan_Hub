@@ -1,10 +1,10 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const JWT_SECRET = process.env.JWT_SECRET || "caselens-super-secret-jwt-key-sih2026-minimum-32-chars";
+const JWT_SECRET = process.env.JWT_SECRET || "samadhan-hub-super-secret-jwt-key-sih2026-minimum-32-chars";
 const encodedKey = new TextEncoder().encode(JWT_SECRET);
 
-export const AUTH_COOKIE_NAME = "caselens_session";
+export const AUTH_COOKIE_NAME = "samadhan_hub_session";
 
 export interface SessionUser {
   userId: string;

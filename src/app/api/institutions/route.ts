@@ -114,3 +114,66 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export async function POST(req: NextRequest) {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json(
+        { ok: false, error: { code: "UNAUTHENTICATED", message: "Sign in required." } },
+        { status: 401 }
+      );
+    }
+
+    const body = await req.json();
+    const { aicteId, name, address, city, state, region, type } = body;
+
+    if (!aicteId || !name || !city || !state || !region) {
+      return NextResponse.json(
+        { ok: false, error: { code: "VALIDATION", message: "Missing required institution fields (aicteId, name, city, state, region)." } },
+        { status: 400 }
+      );
+    }
+
+    const existing = await db.institution.findUnique({
+      where: { aicteId: String(aicteId).trim() },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { ok: false, error: { code: "DUPLICATE", message: "Institution with this AICTE ID already exists." } },
+        { status: 409 }
+      );
+    }
+
+    const normalizedName = String(name)
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const created = await db.institution.create({
+      data: {
+        aicteId: String(aicteId).trim(),
+        name: String(name).trim(),
+        normalizedName,
+        address: String(address || "").trim(),
+        city: String(city).trim(),
+        state: String(state).trim(),
+        region: String(region).trim(),
+        type: String(type || "Engineering").trim(),
+      },
+    });
+
+    return NextResponse.json({
+      ok: true,
+      data: created,
+    }, { status: 201 });
+  } catch (err: unknown) {
+    console.error("POST /api/institutions error:", err);
+    return NextResponse.json(
+      { ok: false, error: { code: "SERVER", message: "Failed to create institution" } },
+      { status: 500 }
+    );
+  }
+}

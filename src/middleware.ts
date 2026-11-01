@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const JWT_SECRET = process.env.JWT_SECRET || "caselens-super-secret-jwt-key-sih2026-minimum-32-chars";
+const JWT_SECRET = process.env.JWT_SECRET || "samadhan-hub-super-secret-jwt-key-sih2026-minimum-32-chars";
 const encodedKey = new TextEncoder().encode(JWT_SECRET);
-const AUTH_COOKIE_NAME = "caselens_session";
+const AUTH_COOKIE_NAME = "samadhan_hub_session";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,13 +14,15 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api/ingest") ||
     pathname.startsWith("/api/auth/login") ||
-    pathname === "/favicon.ico"
+    pathname.startsWith("/.well-known") ||
+    pathname === "/favicon.ico" ||
+    pathname === "/robots.txt"
   ) {
     return NextResponse.next();
   }
 
   // 2. Read session cookie
-  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
+  const token = request.cookies.get(AUTH_COOKIE_NAME)?.value || request.cookies.get("caselens_session")?.value;
   let isAuthenticated = false;
 
   if (token) {

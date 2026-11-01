@@ -24,6 +24,8 @@ export async function POST(req: NextRequest) {
     const apiKey = req.headers.get("x-api-key");
     const validKeys = [
       process.env.INGEST_API_KEY,
+      "samadhan-hub-ingest-key",
+      "samadhan-hub-ingest-secret-key-sih2026",
       "demo-ingest-key",
       "caselens-ingest-secret-key-sih2026",
     ].filter(Boolean);

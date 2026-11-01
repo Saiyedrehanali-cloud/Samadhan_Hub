@@ -22,7 +22,7 @@ interface SidebarProps {
   onCloseMobile?: () => void;
 }
 
-export function Sidebar({ user, activeOverlapCount = 5, isOpenMobile = false, onCloseMobile }: SidebarProps) {
+export function Sidebar({ user, activeOverlapCount = 0, isOpenMobile = false, onCloseMobile }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -70,7 +70,7 @@ export function Sidebar({ user, activeOverlapCount = 5, isOpenMobile = false, on
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-white tracking-tight text-sm">CaseLens</span>
+              <span className="font-bold text-white tracking-tight text-sm">Samadhan Hub</span>
               <span className="text-[10px] font-bold text-white/90 px-1.5 py-0.2 bg-white/15 rounded">
                 AICTE
               </span>

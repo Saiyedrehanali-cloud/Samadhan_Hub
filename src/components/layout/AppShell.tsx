@@ -14,8 +14,8 @@ interface AppShellProps {
 
 export function AppShell({
   user,
-  activeOverlapCount = 5,
-  unreadAlertsCount = 5,
+  activeOverlapCount = 0,
+  unreadAlertsCount = 0,
   children,
 }: AppShellProps) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);

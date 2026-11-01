@@ -1,3 +1,4 @@
+
 # 00 — MASTER PROMPT (paste into your new chat / Windsurf / OpenCode / Claude Code / Antigravity, with all .md files attached)
 
 ---

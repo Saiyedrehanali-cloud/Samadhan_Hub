@@ -1,63 +1,76 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Shield, ArrowRight, Loader2, Check } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Shield, ArrowRight, Loader2, Lock, UserCheck, ShieldCheck } from "lucide-react";
 
-interface DemoAccount {
+interface OfficialRoleAccount {
   label: string;
   roleDesc: string;
   email: string;
-  bureauBadge?: string;
+  badge: string;
 }
 
-const DEMO_ACCOUNTS: DemoAccount[] = [
+const OFFICIAL_ROLES: OfficialRoleAccount[] = [
   {
-    label: "Management",
-    roleDesc: "Full AICTE Oversight",
-    email: "management@aicte.demo",
-    bureauBadge: "HQ",
+    label: "Management Oversight",
+    roleDesc: "AICTE HQ · Full Institutional Oversight",
+    email: "admin@samadhanhub.gov.in",
+    badge: "HQ",
   },
   {
     label: "Regulation Bureau",
-    roleDesc: "RB Case Officer",
-    email: "rb.officer@aicte.demo",
-    bureauBadge: "RB",
+    roleDesc: "RB Case Officer · Show Cause & Affiliations",
+    email: "rb.officer@samadhanhub.gov.in",
+    badge: "RB",
   },
   {
-    label: "PGR Cell",
-    roleDesc: "Grievance Officer",
-    email: "pgrc.officer@aicte.demo",
-    bureauBadge: "PGRC",
+    label: "Public Grievance Redressal",
+    roleDesc: "PGRC Officer · Student & Faculty Complaints",
+    email: "pgrc.officer@samadhanhub.gov.in",
+    badge: "PGRC",
   },
   {
-    label: "Regional Officer",
-    roleDesc: "Central Region",
-    email: "regional.central@aicte.demo",
-    bureauBadge: "Central",
+    label: "Regional Directorate",
+    roleDesc: "Central Region · Zonal Monitoring",
+    email: "regional.central@samadhanhub.gov.in",
+    badge: "RO",
   },
 ];
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const from = searchParams.get("from") || "/";
+  const rawFrom = searchParams.get("from") || "/";
 
-  const [email, setEmail] = useState("management@aicte.demo");
-  const [password, setPassword] = useState("Demo@1234");
-  const [selectedRole, setSelectedRole] = useState("Management");
+  // Sanitize redirect target so browser never redirects to devtools or 404s
+  const isValidAppRoute = (path: string) => {
+    if (!path || !path.startsWith("/")) return false;
+    if (
+      path.startsWith("/.well-known") ||
+      path.startsWith("/_next") ||
+      path.startsWith("/api") ||
+      path === "/login"
+    ) {
+      return false;
+    }
+    return true;
+  };
+
+  const from = isValidAppRoute(rawFrom) ? rawFrom : "/";
+
+  const [email, setEmail] = useState("admin@samadhanhub.gov.in");
+  const [password, setPassword] = useState("Admin@1234");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const selectDemoAccount = (acc: DemoAccount) => {
-    setEmail(acc.email);
-    setPassword("Demo@1234");
-    setSelectedRole(acc.label);
+  const selectRole = (role: OfficialRoleAccount) => {
+    setEmail(role.email);
+    setPassword("Admin@1234");
     setError(null);
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setLoading(true);
     setError(null);
 
@@ -65,18 +78,18 @@ function LoginForm() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: email.trim(), password }),
       });
 
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setError(data?.error?.message || "Invalid credentials. Please try again.");
+        setError(data?.error?.message || "Invalid credentials. Please verify your official ID/email and password.");
         setLoading(false);
         return;
       }
 
-      router.push(from);
-      router.refresh();
+      // Perform a full hard navigation to ensure fresh session cookies are sent
+      window.location.href = from;
     } catch {
       setError("Network error. Please try again.");
       setLoading(false);
@@ -85,23 +98,24 @@ function LoginForm() {
 
   return (
     <div className="bg-surface rounded-xl border border-border shadow-2xs overflow-hidden">
-      {/* Rule 12: Thin top accent line using a blue-to-teal gradient */}
+      {/* Top accent line */}
       <div className="h-1 bg-gradient-to-r from-primary to-bureau-ab w-full" />
 
       <div className="p-6">
-        {/* Quick Demo Selector */}
+        {/* Quick Role Selection for instant evaluation */}
         <div className="mb-5">
-          <label className="block text-xs font-semibold text-muted uppercase tracking-wider mb-2">
-            Select Demo Role
+          <label className="block text-[11px] font-semibold text-muted uppercase tracking-wider mb-2 flex items-center justify-between">
+            <span>Select Official Desk / Role</span>
+            <span className="text-[10px] text-primary font-normal">Click to prefill</span>
           </label>
           <div className="grid grid-cols-2 gap-2">
-            {DEMO_ACCOUNTS.map((acc) => {
-              const isSelected = selectedRole === acc.label;
+            {OFFICIAL_ROLES.map((role) => {
+              const isSelected = email.toLowerCase() === role.email.toLowerCase();
               return (
                 <button
-                  key={acc.label}
+                  key={role.label}
                   type="button"
-                  onClick={() => selectDemoAccount(acc)}
+                  onClick={() => selectRole(role)}
                   className={`flex flex-col items-start p-2.5 rounded-lg border text-left transition-all ${
                     isSelected
                       ? "border-primary bg-selected text-primary font-medium ring-1 ring-primary/30"
@@ -109,10 +123,14 @@ function LoginForm() {
                   }`}
                 >
                   <div className="flex items-center justify-between w-full">
-                    <span className="text-xs font-semibold">{acc.label}</span>
-                    {isSelected && <Check className="w-3.5 h-3.5 text-primary" />}
+                    <span className="text-xs font-semibold leading-tight">{role.label}</span>
+                    <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-slate-100 text-subtle font-bold">
+                      {role.badge}
+                    </span>
                   </div>
-                  <span className="text-[11px] text-muted mt-0.5 leading-tight">{acc.roleDesc}</span>
+                  <span className="text-[10px] text-muted mt-1 leading-tight line-clamp-1">
+                    {role.roleDesc}
+                  </span>
                 </button>
               );
             })}
@@ -128,28 +146,32 @@ function LoginForm() {
         {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-ink mb-1.5">Official Email</label>
+            <label className="block text-xs font-medium text-ink mb-1.5 flex items-center gap-1.5">
+              <UserCheck className="w-3.5 h-3.5 text-muted" />
+              <span>Official Email or Username</span>
+            </label>
             <input
-              type="email"
+              type="text"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="officer@aicte.demo"
+              placeholder="admin@samadhanhub.gov.in or admin"
               className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-surface text-ink placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
             />
           </div>
 
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-medium text-ink">Password</label>
-              <span className="text-[11px] text-muted">Demo: Demo@1234</span>
-            </div>
+            <label className="block text-xs font-medium text-ink mb-1.5 flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-muted" />
+              <span>Password</span>
+            </label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-surface text-ink focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
+              placeholder="••••••••••••"
+              className="w-full px-3 py-2 text-sm rounded-lg border border-border bg-surface text-ink placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
             />
           </div>
 
@@ -161,16 +183,22 @@ function LoginForm() {
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Signing in...</span>
+                <span>Authenticating & Redirecting...</span>
               </>
             ) : (
               <>
-                <span>Sign in as {selectedRole}</span>
+                <span>Sign In to Samadhan Hub</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
           </button>
         </form>
+
+        {/* Security badge footer */}
+        <div className="mt-5 pt-3 border-t border-border flex items-center justify-center gap-1.5 text-[11px] text-muted">
+          <ShieldCheck className="w-3.5 h-3.5 text-success" />
+          <span>Secured with cryptographic audit logging & RBAC</span>
+        </div>
       </div>
     </div>
   );
@@ -179,20 +207,20 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <div className="min-h-screen bg-canvas flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-[420px]">
+      <div className="w-full max-w-[440px]">
         {/* App Branding */}
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-sidebar text-white shadow-2xs mb-3">
-            <Shield className="w-5 h-5" />
+            <Shield className="w-5 h-5 text-primary-50" />
           </div>
           <div className="block">
             <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-neutral-soft text-subtle text-[10px] font-semibold tracking-wider uppercase mb-1">
               AICTE · PS SIH26264
             </span>
           </div>
-          <h1 className="text-2xl font-bold text-ink tracking-tight">CaseLens</h1>
+          <h1 className="text-2xl font-bold text-ink tracking-tight">Samadhan Hub</h1>
           <p className="text-xs text-muted mt-1">
-            One clear view of every institution complaint across AICTE Bureaus & Cells.
+            Integrated complaint monitoring and cross-bureau case coordination engine.
           </p>
         </div>
 

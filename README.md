@@ -1,9 +1,9 @@
-# CaseLens — Integrated Institution Complaint Monitoring & Status Dashboard
+# Samadhan Hub — Integrated Institution Complaint Monitoring & Status Dashboard
 
 > **Smart India Hackathon 2026 · PS SIH26264**  
 > **Organization:** All India Council for Technical Education (AICTE)  
 > **Theme:** Smart Automation · **Category:** Software  
-> **Product Name:** **CaseLens** — *One clear view of every institution-related complaint across AICTE.*
+> **Product Name:** **Samadhan Hub** — *One clear view of every institution-related complaint across AICTE.*
 
 ---
 
@@ -17,7 +17,7 @@ In AICTE, technical institutions frequently receive complaints handled by dispar
 
 Without an integrated platform, officers operate in information silos—leading to parallel inquiries, duplicate show-cause notices, conflicting actions, and missed resolution timelines.
 
-**CaseLens** provides a **single-window monitoring and tracking dashboard** featuring:
+**Samadhan Hub** provides a **single-window monitoring and tracking dashboard** featuring:
 1. **Centralized Institution Profile:** Consolidated grievance history across all bureaus indexed by AICTE Permanent ID.
 2. **Cross-Bureau Overlap Detection (Core Innovation):** Automated 5-signal deterministic algorithm detecting duplicate or parallel cases across bureaus even when descriptions or grievance categories differ.
 3. **End-to-End Case Tracking:** Strictly 6-column minimalist tables, real-time status transitions, chronological action timelines, and bureau transfer workflows.

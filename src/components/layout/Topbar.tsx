@@ -11,7 +11,7 @@ interface TopbarProps {
   unreadAlertsCount?: number;
 }
 
-export function Topbar({ user, onOpenMobileNav, unreadAlertsCount = 5 }: TopbarProps) {
+export function Topbar({ user, onOpenMobileNav, unreadAlertsCount = 0 }: TopbarProps) {
   const getRoleDisplay = () => {
     if (user.role === "MANAGEMENT") return "AICTE HQ · Management Oversight";
     if (user.role === "BUREAU_OFFICER") return `${user.bureauCode || "Bureau"} Officer Desk`;

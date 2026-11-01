@@ -273,7 +273,7 @@ export async function GET(
         status: 200,
         headers: {
           "Content-Type": "text/csv; charset=utf-8",
-          "Content-Disposition": `attachment; filename="caselens-${type}-report.csv"`,
+          "Content-Disposition": `attachment; filename="samadhan-hub-${type}-report.csv"`,
         },
       });
     }

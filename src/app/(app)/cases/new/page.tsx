@@ -42,8 +42,9 @@ export default function NewCasePage() {
       try {
         const res = await fetch("/api/institutions");
         const json = await res.json();
-        if (json.ok) {
-          setInstitutions(json.data);
+        if (json.ok && json.data) {
+          const list = Array.isArray(json.data) ? json.data : (json.data.institutions || []);
+          setInstitutions(list);
         }
       } catch (err) {
         console.error("Failed to fetch institutions:", err);
@@ -148,7 +149,7 @@ export default function NewCasePage() {
 
           <input
             type="text"
-            placeholder="Type to filter colleges (e.g. Apex, 1-4829173, Bhopal)..."
+            placeholder="Type to filter institutions (e.g. IIT, College of Engineering, AICTE ID, City)..."
             value={institutionSearch}
             onChange={(e) => setInstitutionSearch(e.target.value)}
             className="w-full px-3 py-2 text-xs rounded-lg border border-border bg-canvas/60 text-ink placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-primary focus:bg-surface"

@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { db } from "@/lib/db";
 
-const AUDIT_KEY = process.env.AUDIT_KEY || "caselens-tamper-evident-hmac-key-sih2026";
+const AUDIT_KEY = process.env.AUDIT_KEY || "samadhan-hub-tamper-evident-hmac-key-sih2026";
 
 function computeHash(
   prevHash: string,
