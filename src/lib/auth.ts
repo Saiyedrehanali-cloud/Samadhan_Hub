@@ -37,7 +37,7 @@ export async function verifyToken(token: string): Promise<SessionUser | null> {
 
 export async function getSession(): Promise<SessionUser | null> {
   const cookieStore = cookies();
-  const token = cookieStore.get(AUTH_COOKIE_NAME)?.value;
+  const token = cookieStore.get(AUTH_COOKIE_NAME)?.value || cookieStore.get("caselens_session")?.value;
   if (!token) return null;
   return verifyToken(token);
 }
