@@ -81,17 +81,25 @@ function LoginForm() {
         body: JSON.stringify({ email: email.trim(), password }),
       });
 
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        setError(data?.error?.message || "Invalid credentials. Please verify your official ID/email and password.");
+      let data: any = null;
+      try {
+        data = await res.json();
+      } catch {
+        setError(`Server returned status ${res.status}. Please check server connection.`);
+        setLoading(false);
+        return;
+      }
+
+      if (!res.ok || !data?.ok) {
+        setError(data?.error?.message || `Sign in failed (${res.status}). Please verify your credentials.`);
         setLoading(false);
         return;
       }
 
       // Perform a full hard navigation to ensure fresh session cookies are sent
       window.location.href = from;
-    } catch {
-      setError("Network error. Please try again.");
+    } catch (err: any) {
+      setError(err?.message || "Network error. Please try again.");
       setLoading(false);
     }
   };
